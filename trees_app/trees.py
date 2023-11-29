@@ -7,7 +7,7 @@ import datetime as dt
 import plotly.express as px
 from bokeh.plotting import figure
 import altair as alt
-
+import pydeck as pdk
 
 st.title('SF Trees')
 st.write(
@@ -52,6 +52,38 @@ st.altair_chart(fig)
 st.subheader('Altair Chart - Alternative Method')
 fig = alt.Chart(trees_df).mark_bar().encode(x='caretaker', y='count(*):Q')
 st.altair_chart(fig)
+
+st.subheader('Using PyDeck')
+sf_initial_view = pdk.ViewState(latitude=37.77, 
+                                longitude=-122.4,
+                                zoom=11,
+                                pitch=30
+                                )
+
+hx_layer = pdk.Layer(
+    'HexagonLayer',
+    data = trees_df,
+    get_position = ['longitude', 'latitude'],
+    radius=100,
+    extruded=True
+    )
+
+st.pydeck_chart(pdk.Deck(
+    map_style='mapbox://styles/mapbox/light-v9',
+    initial_view_state=sf_initial_view,
+    layers=[hx_layer]
+    ))
+
+
+
+
+
+
+
+
+
+
+
 
 
 
