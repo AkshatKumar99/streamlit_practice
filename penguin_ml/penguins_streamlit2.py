@@ -17,6 +17,7 @@ st.write("""This app uses 6 inputs to predict the species of penguin using
 penguin_file = st.file_uploader('Upload your own file')
 
 if penguin_file is None:
+	penguin_df = pd.read_csv('penguins.csv')
 	with open('rf_penguin.pkl', 'rb') as f:
 		rfc = pickle.load(f)
 	with open('output_penguin.pkl', 'rb') as f:
@@ -72,4 +73,35 @@ new_prediction = rfc.predict(
 prediction_species = unique_penguin_mapping[new_prediction][0]
 
 st.write(f'We predict your penguin is of the {prediction_species} species')
+
+st.write(
+	"""We used a machine learning (Random Forest) model to predict the species, the features used in this prediction are ranked by relative importance below."""
+)
+
+st.image('feature_importance.png')
+
+st.write(
+	"""Below are the histograms for each continuous variable separated by penguin species. The vertical line represents your inputted value."""
+)
+
+fig, ax = plt.subplots()
+ax = sns.displot(x=penguin_df['bill_length_mm'],
+	hue=penguin_df['species'])
+plt.axvline(bill_length)
+plt.title('Bill Length by Species')
+st.pyplot(ax)
+
+ax = sns.displot(x=penguin_df['bill_depth_mm'],
+	hue=penguin_df['species'])
+plt.axvline(bill_depth)
+plt.title('Bill Depth by Species')
+st.pyplot(ax)
+
+ax = sns.displot(x=penguin_df['flipper_length_mm'],
+	hue=penguin_df['species'])
+plt.axvline(flipper_length)
+plt.title('Flipper Length by Species')
+st.pyplot(ax)
+
+
 

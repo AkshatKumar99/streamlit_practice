@@ -3,6 +3,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import pickle
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 penguin_df = pd.read_csv('penguins.csv')
 penguin_df.dropna(inplace=True)
@@ -27,4 +29,16 @@ with open('rf_penguin.pkl', 'wb') as f:
 
 with open('output_penguin.pkl', 'wb') as f:
 	pickle.dump(uniques, f)
+
+fig, ax = plt.subplots()
+
+ax = sns.barplot(x=rfc.feature_importances_, y=features.columns)
+
+plt.title('Which features are the most important for species prediction?')
+plt.xlabel('Importance')
+plt.ylabel('Feature')
+plt.tight_layout()
+fig.savefig('feature_importance.png')
+
+
 
